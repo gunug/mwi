@@ -1,0 +1,38 @@
+.viewer-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: #f0f0f0;
+  padding: 0;
+}
+
+.viewer-page .invitation-preview {
+  width: 100%;
+  max-width: 500px;
+  min-height: 100vh;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.viewer-error,
+.viewer-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: #999;
+  text-align: center;
+}
+
+.viewer-error h2 {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 500px) {
+  .viewer-page {
+    background: white;
+  }
+}

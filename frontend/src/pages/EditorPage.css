@@ -1,0 +1,128 @@
+.editor-page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1.2rem;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.editor-header h2 {
+  font-size: 1.1rem;
+  flex: 1;
+}
+
+.editor-header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-back {
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  background: #eee;
+  font-size: 0.85rem;
+}
+
+.btn-view {
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  background: #e8f0fe;
+  color: #4a90d9;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.btn-save {
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  background: #4a90d9;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.btn-save:disabled {
+  opacity: 0.6;
+}
+
+.editor-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.editor-left {
+  width: 50%;
+  border-right: 1px solid #e0e0e0;
+  overflow-y: auto;
+  background: #fafafa;
+}
+
+.editor-left-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  font-weight: 600;
+  font-size: 0.9rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.btn-add {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #4a90d9;
+  color: white;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.editor-right {
+  width: 50%;
+  overflow-y: auto;
+  background: #e8e8e8;
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: #999;
+}
+
+@media (max-width: 768px) {
+  .editor-body {
+    flex-direction: column;
+  }
+  .editor-left,
+  .editor-right {
+    width: 100%;
+  }
+  .editor-left {
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+    max-height: 50vh;
+  }
+  .editor-right {
+    flex: 1;
+  }
+}

@@ -1,0 +1,182 @@
+.component-list {
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.drag-handle {
+  text-align: center;
+  cursor: grab;
+  padding: 0.2rem;
+  color: #bbb;
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.comp-editor {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.comp-editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  background: #f8f8f8;
+  border-bottom: 1px solid #eee;
+}
+
+.comp-editor-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.comp-editor-actions {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.btn-toggle {
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  background: #eee;
+  color: #666;
+}
+
+.btn-toggle.active {
+  background: #4a90d9;
+  color: white;
+}
+
+.btn-remove {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #fee8e8;
+  color: #d94a4a;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comp-editor-body {
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* CopyPaste Input */
+.cp-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.cp-label {
+  font-size: 0.75rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.cp-input-row {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.cp-input-field {
+  flex: 1;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.cp-input-field:focus {
+  outline: none;
+  border-color: #4a90d9;
+}
+
+textarea.cp-input-field {
+  resize: vertical;
+}
+
+.cp-checkbox {
+  width: 18px;
+  height: 18px;
+}
+
+.cp-buttons {
+  display: flex;
+  gap: 2px;
+}
+
+.cp-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
+  background: #f0f0f0;
+  color: #666;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cp-btn:hover {
+  background: #e0e0e0;
+}
+
+.contact-divider {
+  font-size: 0.75rem;
+  color: #999;
+  border-top: 1px solid #eee;
+  padding-top: 0.5rem;
+  margin-top: 0.3rem;
+  font-weight: 600;
+}
+
+/* Add Component Modal */
+.add-component-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin: 1rem 0;
+}
+
+.add-component-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.7rem 1rem;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: white;
+  transition: background 0.15s;
+}
+
+.add-component-item:hover {
+  background: #f0f6ff;
+  border-color: #4a90d9;
+}
+
+.badge-initial {
+  font-size: 0.7rem;
+  background: #e8f0fe;
+  color: #4a90d9;
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}

@@ -1,0 +1,209 @@
+.invitation-preview {
+  width: 375px;
+  min-height: 600px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.preview-section {
+  padding: 2rem 1.5rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.preview-section:last-child {
+  border-bottom: none;
+}
+
+/* Greeting */
+.preview-greeting {
+  padding: 3rem 1.5rem;
+}
+
+.greeting-title {
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 1.2rem;
+  color: #555;
+}
+
+.greeting-content {
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: #666;
+}
+
+/* Person */
+.preview-person {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.person-role {
+  font-size: 0.75rem;
+  color: #999;
+  margin-bottom: 0.3rem;
+}
+
+.person-parents {
+  font-size: 0.85rem;
+  color: #777;
+  margin-bottom: 0.3rem;
+}
+
+.person-relation {
+  color: #999;
+}
+
+.person-name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.deceased {
+  color: #999;
+}
+
+/* Date */
+.preview-date {
+  text-align: center;
+}
+
+.date-main {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.3rem;
+}
+
+.date-time {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Mini Calendar */
+.mini-calendar {
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+.cal-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  margin-bottom: 0.4rem;
+}
+
+.cal-day-name {
+  font-size: 0.7rem;
+  color: #999;
+  font-weight: 600;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  gap: 2px;
+}
+
+.cal-day {
+  font-size: 0.75rem;
+  padding: 0.2rem;
+  color: #666;
+}
+
+.cal-today {
+  background: #4a90d9;
+  color: white;
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.cal-empty {
+  visibility: hidden;
+}
+
+/* Venue */
+.preview-venue {
+  text-align: center;
+}
+
+.venue-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.3rem;
+}
+
+.venue-hall {
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.venue-address {
+  font-size: 0.85rem;
+  color: #777;
+}
+
+.venue-transport {
+  margin-top: 1rem;
+  text-align: left;
+  font-size: 0.8rem;
+  color: #777;
+  background: #fafafa;
+  padding: 0.8rem;
+  border-radius: 6px;
+}
+
+.transport-title {
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  color: #555;
+}
+
+/* Contact */
+.preview-contact {
+  text-align: center;
+}
+
+.preview-contact h4 {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.8rem;
+}
+
+.contact-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.contact-parents {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.contact-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.contact-name {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.contact-phone {
+  font-size: 0.85rem;
+  color: #4a90d9;
+  text-decoration: none;
+}
