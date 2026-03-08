@@ -1,7 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 
-export default function SortableItem({ id, children }) {
+export default function SortableItem({ id, children, disabled }) {
   const {
     attributes,
     listeners,
@@ -9,7 +9,7 @@ export default function SortableItem({ id, children }) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id })
+  } = useSortable({ id, disabled })
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -18,11 +18,10 @@ export default function SortableItem({ id, children }) {
   }
 
   return (
-    <div ref={setNodeRef} style={style}>
-      <div className="drag-handle" {...attributes} {...listeners}>
-        &#x2630;
-      </div>
-      {children}
+    <div ref={setNodeRef} style={style} {...(disabled ? {} : { ...attributes, ...listeners })}>
+      {typeof children === 'function'
+        ? children({ dragHandleProps: disabled ? null : { ...attributes, ...listeners } })
+        : children}
     </div>
   )
 }

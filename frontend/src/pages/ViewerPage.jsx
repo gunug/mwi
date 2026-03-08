@@ -11,7 +11,18 @@ export default function ViewerPage() {
 
   useEffect(() => {
     fetchInvitation(slug)
-      .then(setData)
+      .then(d => {
+        d.components = d.components.map(c => {
+          if ((c.type === 'groomInfo' || c.type === 'brideInfo') && c.basic.relation === undefined) {
+            c.basic.relation = c.advanced?.relation || (c.type === 'groomInfo' ? '아들' : '딸')
+            c.basic.deceasedFather = c.basic.deceasedFather ?? c.advanced?.deceasedFather ?? false
+            c.basic.deceasedMother = c.basic.deceasedMother ?? c.advanced?.deceasedMother ?? false
+          }
+          return c
+        })
+        if (d.title) document.title = d.title
+        setData(d)
+      })
       .catch(() => setError(true))
   }, [slug])
 

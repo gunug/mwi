@@ -11,13 +11,14 @@ import {
 } from '@dnd-kit/sortable'
 import SortableItem from './SortableItem'
 import ComponentEditor from './ComponentEditor'
+import { REORDER_COLORS } from '../../data/reorderColors'
 
 export default function ComponentList({
   components,
   onUpdate,
-  onToggleAdvanced,
   onRemove,
   onReorder,
+  reorderMode,
 }) {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -41,14 +42,18 @@ export default function ComponentList({
         strategy={verticalListSortingStrategy}
       >
         <div className="component-list">
-          {components.map(comp => (
-            <SortableItem key={comp.id} id={comp.id}>
-              <ComponentEditor
-                component={comp}
-                onUpdate={onUpdate}
-                onToggleAdvanced={onToggleAdvanced}
-                onRemove={onRemove}
-              />
+          {components.map((comp, index) => (
+            <SortableItem key={comp.id} id={comp.id} disabled={!reorderMode}>
+              {({ dragHandleProps }) => (
+                <ComponentEditor
+                  component={comp}
+                  onUpdate={onUpdate}
+                  onRemove={onRemove}
+                  collapsed={reorderMode}
+                  color={reorderMode ? REORDER_COLORS[index % REORDER_COLORS.length] : null}
+                  dragHandleProps={dragHandleProps}
+                />
+              )}
             </SortableItem>
           ))}
         </div>

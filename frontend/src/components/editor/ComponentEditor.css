@@ -5,24 +5,43 @@
   gap: 0.5rem;
 }
 
-.drag-handle {
-  text-align: center;
+.drag-handle-inline {
   cursor: grab;
-  padding: 0.2rem;
   color: #bbb;
   font-size: 0.9rem;
   user-select: none;
+  margin-right: 0.4rem;
 }
 
-.drag-handle:active {
+.drag-handle-inline:active {
   cursor: grabbing;
 }
 
 .comp-editor {
   background: white;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e8e8e8;
+}
+
+.comp-editor-collapsed {
+  cursor: grab;
+}
+
+.comp-editor-collapsed:active {
+  cursor: grabbing;
+}
+
+.comp-editor-collapsed .comp-editor-header {
+  border-bottom: none;
+}
+
+.comp-editor-summary {
+  text-align: center;
+  padding: 0.3rem 0.8rem 0.5rem;
+  font-size: 0.8rem;
+  color: #555;
 }
 
 .comp-editor-header {
@@ -58,16 +77,82 @@
 }
 
 .btn-remove {
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: #fee8e8;
-  color: #d94a4a;
-  font-size: 1rem;
-  font-weight: 700;
+  background: transparent;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.btn-remove:hover {
+  background: #fee8e8;
+}
+
+.delete-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.delete-confirm-modal {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  min-width: 280px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.delete-confirm-modal p {
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 1.2rem;
+}
+
+.delete-confirm-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.btn-cancel {
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  background: #f0f0f0;
+  color: #555;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-cancel:hover {
+  background: #e0e0e0;
+}
+
+.btn-delete {
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  background: #d94a4a;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  background: #c43c3c;
 }
 
 .comp-editor-body {
@@ -146,6 +231,132 @@ textarea.cp-input-field {
   padding-top: 0.5rem;
   margin-top: 0.3rem;
   font-weight: 600;
+}
+
+/* Photo */
+.photo-uploading {
+  font-size: 0.75rem;
+  color: #4a90d9;
+}
+
+.photo-preview-thumb {
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #eee;
+}
+
+.photo-preview-thumb img {
+  width: 100%;
+  display: block;
+}
+
+/* Address Search */
+.address-results {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-top: 0.3rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.address-result-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 1px solid #f0f0f0;
+  background: white;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.8rem;
+}
+
+.address-result-item:last-child {
+  border-bottom: none;
+}
+
+.address-result-item:hover {
+  background: #f0f6ff;
+}
+
+.address-result-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.address-result-addr {
+  color: #888;
+  font-size: 0.75rem;
+}
+
+.nav-selected-info {
+  background: #f0f6ff;
+  border: 1px solid #4a90d9;
+  border-radius: 6px;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.nav-selected-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.nav-selected-addr {
+  color: #666;
+  margin-top: 0.15rem;
+}
+
+.nav-selected-coords {
+  color: #999;
+  font-size: 0.7rem;
+  margin-top: 0.15rem;
+}
+
+/* Gallery Editor */
+.gallery-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.3rem;
+}
+
+.gallery-editor-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #eee;
+}
+
+.gallery-editor-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-editor-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery-editor-remove:hover {
+  background: rgba(217, 74, 74, 0.9);
 }
 
 /* Add Component Modal */

@@ -8,6 +8,7 @@ export default function MainPage() {
   const [invitations, setInvitations] = useState([])
   const [showModal, setShowModal] = useState(false)
   const [slug, setSlug] = useState('')
+  const [title, setTitle] = useState('')
   const [slugError, setSlugError] = useState('')
   const [copied, setCopied] = useState(null)
   const navigate = useNavigate()
@@ -31,10 +32,11 @@ export default function MainPage() {
       setSlugError('이미 사용 중인 배포명입니다')
       return
     }
-    const data = createDefaultInvitation(slug)
+    const data = createDefaultInvitation(slug, title)
     await createInvitation(data)
     setShowModal(false)
     setSlug('')
+    setTitle('')
     navigate(`/editor/${slug}`)
   }
 
@@ -72,7 +74,7 @@ export default function MainPage() {
               <div className="card-info">
                 <strong>{inv.id}</strong>
                 <span className="card-date">{inv.createdAt}</span>
-                <span className="card-url">{window.location.origin}/{inv.id}</span>
+                <a className="card-url" href={`/${inv.id}`} target="_blank" rel="noopener noreferrer">{window.location.origin}/{inv.id}</a>
               </div>
               <div className="card-actions">
                 <button
@@ -103,6 +105,15 @@ export default function MainPage() {
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
             <h2>새 청첩장 만들기</h2>
+            <label>
+              타이틀 (링크 제목으로 표시됩니다)
+              <input
+                type="text"
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                placeholder="예: 홍길동 ♥ 김영희 결혼합니다"
+              />
+            </label>
             <label>
               배포명 (URL에 사용됩니다)
               <input

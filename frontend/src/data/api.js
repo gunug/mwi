@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000'
+const API_BASE = import.meta.env.VITE_API_URL || ''
 
 export async function fetchInvitations() {
   const res = await fetch(`${API_BASE}/api/invitations`)
@@ -41,10 +41,27 @@ export async function deleteInvitation(id) {
   return res.json()
 }
 
+export async function searchAddress(query) {
+  const res = await fetch(`${API_BASE}/api/search-address?query=${encodeURIComponent(query)}`)
+  return res.json()
+}
+
 export async function uploadImage(file) {
   const formData = new FormData()
   formData.append('image', file)
   const res = await fetch(`${API_BASE}/api/upload`, {
+    method: 'POST',
+    body: formData,
+  })
+  return res.json()
+}
+
+export async function uploadImages(files) {
+  const formData = new FormData()
+  for (const file of files) {
+    formData.append('images', file)
+  }
+  const res = await fetch(`${API_BASE}/api/upload-multiple`, {
     method: 'POST',
     body: formData,
   })

@@ -5,6 +5,7 @@ import { COMPONENT_TYPES } from '../data/componentDefaults'
 import ComponentList from '../components/editor/ComponentList'
 import AddComponentModal from '../components/editor/AddComponentModal'
 import InvitationPreview from '../components/preview/InvitationPreview'
+import { REORDER_COLORS } from '../data/reorderColors'
 import './EditorPage.css'
 
 export default function EditorPage() {
@@ -13,10 +14,23 @@ export default function EditorPage() {
   const [data, setData] = useState(null)
   const [showAddModal, setShowAddModal] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [reorderMode, setReorderMode] = useState(false)
 
   useEffect(() => {
     fetchInvitation(id)
-      .then(setData)
+      .then(d => {
+        d.components = d.components.map(c => {
+          if ((c.type === 'groomInfo' || c.type === 'brideInfo') && c.basic.relation === undefined) {
+            c.basic.relation = c.advanced?.relation || (c.type === 'groomInfo' ? '아들' : '딸')
+            c.basic.deceasedFather = c.basic.deceasedFather ?? c.advanced?.deceasedFather ?? false
+            c.basic.deceasedMother = c.basic.deceasedMother ?? c.advanced?.deceasedMother ?? false
+          }
+          return c
+        })
+        if (d.title === undefined) d.title = ''
+        if (d.ogImageUrl === undefined) d.ogImageUrl = ''
+        setData(d)
+      })
       .catch(() => navigate('/'))
   }, [id, navigate])
 
@@ -34,15 +48,6 @@ export default function EditorPage() {
         c.id === componentId
           ? { ...c, [section]: { ...c[section], [field]: value } }
           : c
-      ),
-    }))
-  }
-
-  function toggleAdvanced(componentId) {
-    setData(prev => ({
-      ...prev,
-      components: prev.components.map(c =>
-        c.id === componentId ? { ...c, showAdvanced: !c.showAdvanced } : c
       ),
     }))
   }
@@ -85,7 +90,6 @@ export default function EditorPage() {
         order: prev.components.length,
         basic,
         advanced,
-        showAdvanced: false,
       }
 
       return {
@@ -134,20 +138,33 @@ export default function EditorPage() {
         <div className="editor-left">
           <div className="editor-left-header">
             <span>컴포넌트 편집</span>
-            <button className="btn-add" onClick={() => setShowAddModal(true)}>
-              +
-            </button>
+            <div className="editor-left-actions">
+              <button
+                className={`btn-reorder ${reorderMode ? 'active' : ''}`}
+                onClick={() => setReorderMode(!reorderMode)}
+              >
+                {reorderMode ? '순서 변경 완료' : '순서 변경'}
+              </button>
+              <button className="btn-add" onClick={() => setShowAddModal(true)}>
+                +
+              </button>
+            </div>
           </div>
           <ComponentList
             components={data.components}
             onUpdate={updateComponent}
-            onToggleAdvanced={toggleAdvanced}
             onRemove={removeComponent}
             onReorder={reorderComponents}
+            reorderMode={reorderMode}
           />
         </div>
         <div className="editor-right">
-          <InvitationPreview components={data.components} />
+          <InvitationPreview
+            components={data.components}
+            reorderColors={reorderMode ? REORDER_COLORS : null}
+            reorderMode={reorderMode}
+            onReorder={reorderComponents}
+          />
         </div>
       </div>
 

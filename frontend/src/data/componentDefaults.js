@@ -19,11 +19,11 @@ export const COMPONENT_TYPES = {
       name: '',
       fatherName: '',
       motherName: '',
-    },
-    defaultAdvanced: {
-      relation: '장남',
+      relation: '아들',
       deceasedFather: false,
       deceasedMother: false,
+    },
+    defaultAdvanced: {
     },
   },
   brideInfo: {
@@ -33,11 +33,11 @@ export const COMPONENT_TYPES = {
       name: '',
       fatherName: '',
       motherName: '',
-    },
-    defaultAdvanced: {
-      relation: '장녀',
+      relation: '딸',
       deceasedFather: false,
       deceasedMother: false,
+    },
+    defaultAdvanced: {
     },
   },
   weddingDate: {
@@ -61,7 +61,62 @@ export const COMPONENT_TYPES = {
     defaultAdvanced: {
       hallName: '',
       showMap: false,
-      transportation: '',
+    },
+  },
+  transportation: {
+    label: '교통 안내',
+    initial: false,
+    defaultBasic: {
+      content: '',
+    },
+    defaultAdvanced: {
+    },
+  },
+  summary: {
+    label: '요약',
+    initial: false,
+    defaultBasic: {
+      groomName: '',
+      brideName: '',
+      date: '',
+      time: '',
+      venueName: '',
+    },
+    defaultAdvanced: {
+    },
+  },
+  photo: {
+    label: '사진',
+    initial: false,
+    defaultBasic: {
+      imageUrl: '',
+      caption: '',
+    },
+    defaultAdvanced: {
+    },
+  },
+  gallery: {
+    label: '갤러리',
+    initial: false,
+    defaultBasic: {
+      images: [],
+    },
+    defaultAdvanced: {
+    },
+  },
+  navigation: {
+    label: '네비게이션',
+    initial: false,
+    defaultBasic: {
+      destinationName: '',
+      address: '',
+      latitude: '',
+      longitude: '',
+    },
+    defaultAdvanced: {
+      showNaverMap: true,
+      showTmap: true,
+      showKakaoNavi: true,
     },
   },
   contact: {
@@ -86,7 +141,7 @@ export const COMPONENT_TYPES = {
   },
 }
 
-export function createDefaultInvitation(id) {
+export function createDefaultInvitation(id, title = '') {
   const components = Object.entries(COMPONENT_TYPES)
     .filter(([, def]) => def.initial)
     .map(([type, def], index) => ({
@@ -95,12 +150,13 @@ export function createDefaultInvitation(id) {
       order: index,
       basic: { ...def.defaultBasic },
       advanced: { ...def.defaultAdvanced },
-      showAdvanced: false,
     }))
 
   return {
     id,
     createdAt: new Date().toISOString().split('T')[0],
+    title,
+    ogImageUrl: '',
     components,
     deletedComponents: {},
   }

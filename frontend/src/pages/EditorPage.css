@@ -65,6 +65,32 @@
   background: #fafafa;
 }
 
+.title-editor {
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.title-editor-header {
+  padding: 0.6rem 0.8rem;
+  background: #f0f0f0;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.title-editor-body {
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.title-hint {
+  font-size: 0.7rem;
+  color: #999;
+  font-style: italic;
+}
+
 .editor-left-header {
   display: flex;
   justify-content: space-between;
@@ -77,6 +103,25 @@
   position: sticky;
   top: 0;
   z-index: 10;
+}
+
+.editor-left-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.btn-reorder {
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  background: #eee;
+  color: #666;
+}
+
+.btn-reorder.active {
+  background: #4a90d9;
+  color: white;
 }
 
 .btn-add {
@@ -98,6 +143,7 @@
   background: #e8e8e8;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
   padding: 1rem;
 }
 

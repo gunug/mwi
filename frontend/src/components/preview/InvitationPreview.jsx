@@ -1,3 +1,17 @@
+import { useState, useEffect, useRef } from 'react'
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import './InvitationPreview.css'
 
 function formatDate(dateStr) {
@@ -42,11 +56,11 @@ function PersonPreview({ basic, advanced, role }) {
     <div className="preview-section preview-person">
       <div className="person-role">{role}</div>
       <div className="person-parents">
-        {deceased(basic.fatherName, advanced?.deceasedFather)}
+        {deceased(basic.fatherName, basic.deceasedFather)}
         {basic.fatherName && basic.motherName && ' · '}
-        {deceased(basic.motherName, advanced?.deceasedMother)}
-        {(basic.fatherName || basic.motherName) && advanced?.relation && (
-          <span className="person-relation">의 {advanced.relation}</span>
+        {deceased(basic.motherName, basic.deceasedMother)}
+        {(basic.fatherName || basic.motherName) && basic.relation && (
+          <span className="person-relation">의 {basic.relation}</span>
         )}
       </div>
       <div className="person-name">{basic.name}</div>
@@ -105,12 +119,141 @@ function WeddingVenuePreview({ basic, advanced }) {
         {advanced?.hallName && <span className="venue-hall"> {advanced.hallName}</span>}
       </div>
       <div className="venue-address">{basic.address}</div>
-      {advanced?.transportation && (
-        <div className="venue-transport">
-          <div className="transport-title">오시는 길</div>
-          <p>{advanced.transportation}</p>
-        </div>
+    </div>
+  )
+}
+
+function TransportationPreview({ basic }) {
+  if (!basic.content) return null
+  return (
+    <div className="preview-section preview-transportation">
+      <div className="transport-title">오시는 길</div>
+      <p className="transport-content">
+        {basic.content.split('\n').map((line, i) => (
+          <span key={i}>{line}<br /></span>
+        ))}
+      </p>
+    </div>
+  )
+}
+
+function KakaoMapView({ latitude, longitude, name }) {
+  const mapRef = useRef(null)
+  const mapInstance = useRef(null)
+
+  useEffect(() => {
+    if (!latitude || !longitude || !mapRef.current) return
+    if (!window.kakao?.maps) return
+
+    window.kakao.maps.load(() => {
+      const lat = parseFloat(latitude)
+      const lng = parseFloat(longitude)
+      const position = new window.kakao.maps.LatLng(lat, lng)
+
+      if (mapInstance.current) {
+        mapInstance.current.setCenter(position)
+      } else {
+        const map = new window.kakao.maps.Map(mapRef.current, {
+          center: position,
+          level: 3,
+          draggable: false,
+        })
+        mapInstance.current = map
+      }
+
+      // Clear existing markers
+      const marker = new window.kakao.maps.Marker({ position })
+      marker.setMap(mapInstance.current)
+
+      if (name) {
+        const infowindow = new window.kakao.maps.InfoWindow({
+          content: `<div style="padding:4px 8px;font-size:12px;white-space:nowrap">${name}</div>`,
+        })
+        infowindow.open(mapInstance.current, marker)
+      }
+    })
+  }, [latitude, longitude, name])
+
+  return <div ref={mapRef} className="kakao-map" />
+}
+
+function NavigationPreview({ basic, advanced }) {
+  const { destinationName, address, latitude, longitude } = basic
+  const hasCoords = latitude && longitude
+  const name = encodeURIComponent(destinationName || address || '목적지')
+
+  const navLinks = []
+  if (advanced?.showNaverMap !== false) {
+    navLinks.push({
+      label: '네이버 지도',
+      url: hasCoords
+        ? `nmap://place?lat=${latitude}&lng=${longitude}&name=${name}&appname=wedding`
+        : null,
+      fallback: hasCoords
+        ? `https://map.naver.com/v5/?c=${longitude},${latitude},15,0,0,0,dh`
+        : `https://map.naver.com/v5/search/${name}`,
+      className: 'nav-btn-naver',
+    })
+  }
+  if (advanced?.showTmap !== false) {
+    navLinks.push({
+      label: 'T map',
+      url: hasCoords
+        ? `tmap://route?goalname=${name}&goaly=${latitude}&goalx=${longitude}`
+        : null,
+      fallback: null,
+      className: 'nav-btn-tmap',
+    })
+  }
+  if (advanced?.showKakaoNavi !== false) {
+    navLinks.push({
+      label: '카카오내비',
+      url: hasCoords
+        ? `kakaomap://look?p=${latitude},${longitude}`
+        : null,
+      fallback: hasCoords
+        ? `https://map.kakao.com/link/to/${name},${latitude},${longitude}`
+        : `https://map.kakao.com/link/search/${name}`,
+      className: 'nav-btn-kakao',
+    })
+  }
+
+  function handleClick(link) {
+    if (!link.url && !link.fallback) return
+    if (link.url) {
+      const timeout = setTimeout(() => {
+        if (link.fallback) window.location.href = link.fallback
+      }, 1500)
+      window.location.href = link.url
+      window.addEventListener('blur', () => clearTimeout(timeout), { once: true })
+    } else if (link.fallback) {
+      window.location.href = link.fallback
+    }
+  }
+
+  return (
+    <div className="preview-section preview-navigation">
+      <h4>길 안내</h4>
+      {hasCoords && (
+        <KakaoMapView
+          latitude={latitude}
+          longitude={longitude}
+          name={destinationName}
+        />
       )}
+      {address && <div className="nav-address">{address}</div>}
+      <div className="nav-buttons">
+        {navLinks.map(link => (
+          <button
+            key={link.label}
+            className={`nav-btn ${link.className}`}
+            onClick={() => handleClick(link)}
+            disabled={!hasCoords && !link.fallback}
+          >
+            {link.label}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }
@@ -148,29 +291,152 @@ function ContactPreview({ basic, advanced }) {
   )
 }
 
+function SummaryPreview({ basic }) {
+  return (
+    <div className="preview-section preview-summary">
+      <div className="summary-names">
+        <span className="summary-name">{basic.groomName || '신랑'}</span>
+        <span className="summary-amp">&amp;</span>
+        <span className="summary-name">{basic.brideName || '신부'}</span>
+      </div>
+      {basic.date && <div className="summary-date">{formatDate(basic.date)}</div>}
+      {basic.time && <div className="summary-time">{formatTime(basic.time)}</div>}
+      {basic.venueName && <div className="summary-venue">{basic.venueName}</div>}
+    </div>
+  )
+}
+
+function PhotoPreview({ basic }) {
+  if (!basic.imageUrl) return null
+  return (
+    <div className="preview-section preview-photo">
+      <img src={basic.imageUrl} alt={basic.caption || ''} className="photo-image" />
+      {basic.caption && <div className="photo-caption">{basic.caption}</div>}
+    </div>
+  )
+}
+
+function GalleryPreview({ basic }) {
+  const [viewIndex, setViewIndex] = useState(null)
+  const images = basic.images || []
+  if (images.length === 0) return null
+
+  return (
+    <div className="preview-section preview-gallery">
+      <div className="gallery-grid">
+        {images.map((img, i) => (
+          <div key={i} className="gallery-thumb" onClick={() => setViewIndex(i)}>
+            <img src={img.thumbUrl} alt="" />
+          </div>
+        ))}
+      </div>
+      {viewIndex !== null && (
+        <div className="gallery-popup-overlay" onClick={() => setViewIndex(null)}>
+          <button className="gallery-popup-close" onClick={() => setViewIndex(null)}>X</button>
+          <img
+            className="gallery-popup-image"
+            src={images[viewIndex].url}
+            alt=""
+            onClick={e => e.stopPropagation()}
+          />
+        </div>
+      )}
+    </div>
+  )
+}
+
 const RENDERERS = {
   greeting: GreetingPreview,
   groomInfo: (props) => <PersonPreview {...props} role="신랑" />,
   brideInfo: (props) => <PersonPreview {...props} role="신부" />,
+  summary: SummaryPreview,
+  photo: PhotoPreview,
+  gallery: GalleryPreview,
   weddingDate: WeddingDatePreview,
   weddingVenue: WeddingVenuePreview,
+  transportation: TransportationPreview,
+  navigation: NavigationPreview,
   contact: ContactPreview,
 }
 
-export default function InvitationPreview({ components }) {
+function SortablePreviewItem({ id, children }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    cursor: 'grab',
+  }
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      {children}
+    </div>
+  )
+}
+
+export default function InvitationPreview({ components, reorderColors, reorderMode, onReorder }) {
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+  )
+
+  function handleDragEnd(event) {
+    const { active, over } = event
+    if (over && active.id !== over.id) {
+      onReorder(active.id, over.id)
+    }
+  }
+
+  const content = components.map((comp, index) => {
+    const Renderer = RENDERERS[comp.type]
+    if (!Renderer) return null
+    const color = reorderColors ? reorderColors[index % reorderColors.length] : null
+    const inner = (
+      <div key={comp.id} className="preview-section-wrap" style={color ? { position: 'relative' } : undefined}>
+        {color && (
+          <div className="preview-color-overlay" style={{ backgroundColor: color }} />
+        )}
+        <Renderer
+          basic={comp.basic}
+          advanced={comp.advanced}
+        />
+      </div>
+    )
+
+    if (reorderMode) {
+      return (
+        <SortablePreviewItem key={comp.id} id={comp.id}>
+          {inner}
+        </SortablePreviewItem>
+      )
+    }
+    return inner
+  })
+
+  if (reorderMode) {
+    return (
+      <div className="invitation-preview">
+        <div className="preview-reorder-notice">드래그하여 순서를 변경하세요</div>
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+          <SortableContext items={components.map(c => c.id)} strategy={verticalListSortingStrategy}>
+            {content}
+          </SortableContext>
+        </DndContext>
+      </div>
+    )
+  }
+
   return (
     <div className="invitation-preview">
-      {components.map(comp => {
-        const Renderer = RENDERERS[comp.type]
-        if (!Renderer) return null
-        return (
-          <Renderer
-            key={comp.id}
-            basic={comp.basic}
-            advanced={comp.advanced}
-          />
-        )
-      })}
+      {content}
     </div>
   )
 }
